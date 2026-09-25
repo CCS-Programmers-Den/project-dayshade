@@ -172,7 +172,14 @@
   }
 
 
+  .events-main-glass {
+    background: linear-gradient(180deg, rgba(72, 72, 72, 0.9) 0%, rgba(39, 39, 41, 0.9) 44%, rgba(39, 39, 41, 0.9) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
   .events-banner-gradient {
+    background-color: #0e0e10;
     background-image: linear-gradient(to bottom, #38383f, #222226, #0e0e10);
   }
 }

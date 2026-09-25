@@ -1,25 +1,149 @@
+export type MonthCode =
+  | "JAN"
+  | "FEB"
+  | "MAR"
+  | "APR"
+  | "MAY"
+  | "JUN"
+  | "JUL"
+  | "AUG"
+  | "SEP"
+  | "OCT"
+  | "NOV"
+  | "DEC";
+
+export const MONTH_NAMES: Record<MonthCode, string> = {
+  JAN: "JANUARY",
+  FEB: "FEBRUARY",
+  MAR: "MARCH",
+  APR: "APRIL",
+  MAY: "MAY",
+  JUN: "JUNE",
+  JUL: "JULY",
+  AUG: "AUGUST",
+  SEP: "SEPTEMBER",
+  OCT: "OCTOBER",
+  NOV: "NOVEMBER",
+  DEC: "DECEMBER",
+};
+
+export const ALL_MONTH_CODES: MonthCode[] = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
+];
+
 export interface MilestoneItem {
-  id: string;
-  month: string;
-  fullMonth: string;
-  title: string;
+  id?: string;
+  month: MonthCode;
+  fullMonth?: string;
+  title?: string;
   image?: string;
-  events: string[];
-  achievements: string[];
+  events?: string[];
+  achievements?: string[];
 }
 
 export interface YearMilestones {
   year: number;
-  label: string;
+  label?: string;
   description?: string;
   milestones: MilestoneItem[];
+}
+
+/**
+ * Checks if a milestone item has meaningful content.
+ * A milestone is considered to have a value if it has at least one non-empty event or achievement.
+ */
+export function hasMilestoneValue(milestone: MilestoneItem): boolean {
+  if (!milestone) return false;
+
+  const hasEvents =
+    Array.isArray(milestone.events) &&
+    milestone.events.some((e) => typeof e === "string" && e.trim().length > 0);
+
+  const hasAchievements =
+    Array.isArray(milestone.achievements) &&
+    milestone.achievements.some(
+      (a) => typeof a === "string" && a.trim().length > 0
+    );
+
+  const hasTitleAndDetails =
+    typeof milestone.title === "string" &&
+    milestone.title.trim().length > 0 &&
+    (hasEvents || hasAchievements || Boolean(milestone.image));
+
+  return hasEvents || hasAchievements || hasTitleAndDetails;
+}
+
+/**
+ * Checks if a year has at least one milestone with value.
+ */
+export function hasYearValue(yearData: YearMilestones): boolean {
+  if (!yearData || !Array.isArray(yearData.milestones)) return false;
+  return yearData.milestones.some((m) => hasMilestoneValue(m));
+}
+
+/**
+ * Cleans up the year and milestone data and only keeps entries with actual values. Missing labels, full month names, and IDs are added automatically.
+ */
+export function getVisibleEventsData(
+  data: YearMilestones[] = EVENTS_DATA
+): YearMilestones[] {
+  return data
+    .filter((y) => hasYearValue(y))
+    .map((y) => ({
+      ...y,
+      label: y.label || y.year.toString(),
+      milestones: y.milestones
+        .filter((m) => hasMilestoneValue(m))
+        .map((m) => ({
+          ...m,
+          id: m.id || `${y.year}-${m.month.toLowerCase()}`,
+          fullMonth: m.fullMonth || MONTH_NAMES[m.month] || m.month,
+          title:
+            m.title || `${y.year} ${MONTH_NAMES[m.month] || m.month} Milestone`,
+          events: (m.events || []).filter(
+            (e) => typeof e === "string" && e.trim().length > 0
+          ),
+          achievements: (m.achievements || []).filter(
+            (a) => typeof a === "string" && a.trim().length > 0
+          ),
+        })),
+    }));
+}
+
+/**
+ * Helper to generate a fresh 12-month empty template for any year.
+ */
+export function createEmptyYear(year: number, description = ""): YearMilestones {
+  return {
+    year,
+    label: year.toString(),
+    description: description || `Milestones and achievements for ${year}.`,
+    milestones: ALL_MONTH_CODES.map((month) => ({
+      month,
+      title: "",
+      events: [],
+      achievements: [],
+    })),
+  };
 }
 
 export const EVENTS_DATA: YearMilestones[] = [
   {
     year: 2023,
     label: "2023",
-    description: "Foundations laid, initial competitions conquered, and foundational workshops launched.",
+    description:
+      "Foundations laid, initial competitions conquered, and foundational workshops launched.",
     milestones: [
       {
         id: "2023-jan",
@@ -86,7 +210,8 @@ export const EVENTS_DATA: YearMilestones[] = [
   {
     year: 2024,
     label: "2024",
-    description: "Expansion, major university hackathons, industry partnerships, and competitive triumphs.",
+    description:
+      "Expansion, major university hackathons, industry partnerships, and competitive triumphs.",
     milestones: [
       {
         id: "2024-jan",
@@ -153,7 +278,8 @@ export const EVENTS_DATA: YearMilestones[] = [
   {
     year: 2025,
     label: "2025",
-    description: "Pioneering new standards, scalable systems, and continuous achievements.",
+    description:
+      "Pioneering new standards, scalable systems, and continuous achievements.",
     milestones: [
       {
         id: "2025-jan",
@@ -190,7 +316,8 @@ export const EVENTS_DATA: YearMilestones[] = [
   {
     year: 2026,
     label: "2026",
-    description: "The journey continues — upcoming milestones and future endeavors.",
+    description:
+      "The journey continues — upcoming milestones and future endeavors.",
     milestones: [
       {
         id: "2026-jan",
@@ -207,6 +334,52 @@ export const EVENTS_DATA: YearMilestones[] = [
           "Stay tuned for groundbreaking projects and competitions.",
         ],
       },
+    ],
+  },
+  // ─── 2027 ──────────────────────────────────────────────────────────────────
+  // Pre-configured for all 12 months.
+  // note: This year and its months will NOT show on the frontend until it is added with values
+  // (at least 1 event or achievement) to any month.
+  {
+    year: 2027,
+    label: "2027",
+    description: "Upcoming events and milestones for 2027.",
+    milestones: [
+      { month: "JAN", title: "", events: [], achievements: [] },
+      { month: "FEB", title: "", events: [], achievements: [] },
+      { month: "MAR", title: "", events: [], achievements: [] },
+      { month: "APR", title: "", events: [], achievements: [] },
+      { month: "MAY", title: "", events: [], achievements: [] },
+      { month: "JUN", title: "", events: [], achievements: [] },
+      { month: "JUL", title: "", events: [], achievements: [] },
+      { month: "AUG", title: "", events: [], achievements: [] },
+      { month: "SEP", title: "", events: [], achievements: [] },
+      { month: "OCT", title: "", events: [], achievements: [] },
+      { month: "NOV", title: "", events: [], achievements: [] },
+      { month: "DEC", title: "", events: [], achievements: [] },
+    ],
+  },
+  // ─── 2028 ──────────────────────────────────────────────────────────────────
+  // Pre-configured for all 12 months.
+  // note: This year and its months will NOT show on the frontend until it is added with values
+  // (at least 1 event or achievement) to any month.
+  {
+    year: 2028,
+    label: "2028",
+    description: "Upcoming events and milestones for 2028.",
+    milestones: [
+      { month: "JAN", title: "", events: [], achievements: [] },
+      { month: "FEB", title: "", events: [], achievements: [] },
+      { month: "MAR", title: "", events: [], achievements: [] },
+      { month: "APR", title: "", events: [], achievements: [] },
+      { month: "MAY", title: "", events: [], achievements: [] },
+      { month: "JUN", title: "", events: [], achievements: [] },
+      { month: "JUL", title: "", events: [], achievements: [] },
+      { month: "AUG", title: "", events: [], achievements: [] },
+      { month: "SEP", title: "", events: [], achievements: [] },
+      { month: "OCT", title: "", events: [], achievements: [] },
+      { month: "NOV", title: "", events: [], achievements: [] },
+      { month: "DEC", title: "", events: [], achievements: [] },
     ],
   },
 ];

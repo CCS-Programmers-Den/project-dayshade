@@ -3,22 +3,27 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { EVENTS_DATA } from "./events-data";
+import { EVENTS_DATA, getVisibleEventsData } from "@/data/events-data";
 import EventsTimelineView from "./events-timeline-view";
 import EventsYearOverview from "./events-year-overview";
 
 export default function EventsMain() {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
+  // Only show years and months that contain actual data
+  const visibleYears = getVisibleEventsData(EVENTS_DATA);
+
   const selectedYearData = selectedYear
-    ? EVENTS_DATA.find((y) => y.year === selectedYear) ?? null
+    ? visibleYears.find((y) => y.year === selectedYear) ?? null
     : null;
 
+  // Select a year and scroll back to the top of the page
   const handleSelectYear = (year: number) => {
     setSelectedYear(year);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Return to the year selection and scroll back to the top
   const handleBack = () => {
     setSelectedYear(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -26,10 +31,14 @@ export default function EventsMain() {
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
-      {/* Base background gradient  Top white/light gradient smoothly fading to deep charcoal/black */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#55555C] via-[#232326] via-30% to-[#101012] -z-20" />
-      {/* Top soft ambient light glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[350px] bg-white/[0.04] blur-[120px] rounded-full pointer-events-none -z-10" />
+      {/* Deep base under glass */}
+      <div className="absolute inset-0 bg-[#101012] -z-30 pointer-events-none" />
+
+      {/* Soft glow at the top of the page */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[350px] bg-white/[0.05] blur-[120px] rounded-full pointer-events-none -z-20" />
+
+      {/* Main glass background layer */}
+      <div className="absolute inset-0 events-main-glass -z-10 pointer-events-none" />
 
       <div className="relative z-0">
         <AnimatePresence mode="wait">
@@ -43,7 +52,7 @@ export default function EventsMain() {
             >
               <EventsTimelineView
                 yearData={selectedYearData}
-                allYears={EVENTS_DATA}
+                allYears={visibleYears}
                 onBack={handleBack}
                 onSelectYear={handleSelectYear}
               />
@@ -57,7 +66,7 @@ export default function EventsMain() {
               transition={{ duration: 0.25, ease: "easeOut" }}
             >
               <EventsYearOverview
-                years={EVENTS_DATA}
+                years={visibleYears}
                 onSelectYear={handleSelectYear}
               />
             </motion.div>
