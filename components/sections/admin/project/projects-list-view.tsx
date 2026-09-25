@@ -23,20 +23,22 @@ const ProjectsListView = ({ onRefresh }: ProjectsListViewProps = {}) => {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function loadProjects() {
-    try {
-      const data = await getProjects();
-      setProjects(data);
-      // Call parent refresh to update showcase cards
-      if (onRefresh) {
-        onRefresh();
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong.");
-    } finally {
-      setLoading(false);
-    }
+  function loadProjects() {
+    return getProjects()
+      .then((data) => {
+        setProjects(data);
+        // Call parent refresh to update showcase cards
+        if (onRefresh) {
+          onRefresh();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Something went wrong.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   useEffect(() => {

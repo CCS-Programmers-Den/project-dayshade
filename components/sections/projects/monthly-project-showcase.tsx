@@ -6,14 +6,11 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { CalendarDays, ChevronRight } from "lucide-react";
 import { getCurrentShowcase } from "@/lib/actions/projects/get-current-showcase";
+import { useMounted } from "@/hooks/use-mounted";
 
 export default function MonthlyProjectShowcase() {
   const [project, setProject] = useState<any | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   useEffect(() => {
     async function load() {
