@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 import { isRecruitmentOpen } from "@/lib/actions/settings/recruitment-status";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname === "/join") {
     const data = await isRecruitmentOpen();
     if (!data.is_recruitment_open) {
