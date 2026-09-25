@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Jost } from "next/font/google";
 import Image from "next/image";
 import { useState } from "react";
-import { YearMilestones } from "@/data/events-data";
+import { YearMilestones } from "@/lib/constants/events-data";
 
 const jost = Jost({
   subsets: ["latin"],

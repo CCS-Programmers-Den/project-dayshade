@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Calendar, ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { Jost } from "next/font/google";
 import Image from "next/image";
-import { YearMilestones, hasMilestoneValue } from "@/data/events-data";
+import { YearMilestones, hasMilestoneValue } from "@/lib/constants/events-data";
 
 const jost = Jost({
   subsets: ["latin"],

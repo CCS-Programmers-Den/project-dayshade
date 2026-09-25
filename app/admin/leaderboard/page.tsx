@@ -1,4 +1,4 @@
-import LeaderboardView from "@/components/views/leaderboard-view";
+import LeaderboardView from "@/components/sections/leaderboard/leaderboard-view";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import FileUploadForms from "@/components/sections/admin/leaderboards/FileUploadForms";
+import FileUploadForms from "@/components/sections/admin/leaderboard/file-upload-forms";
 
 export default function LeaderboardPage() {
   return (

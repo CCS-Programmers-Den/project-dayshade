@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { getCurrentShowcase } from "@/lib/projects/getCurrentShowcase";
+import { getCurrentShowcase } from "@/lib/actions/projects/get-current-showcase";
 import * as React from "react";
 import { motion } from "framer-motion";
 

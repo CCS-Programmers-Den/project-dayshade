@@ -7,10 +7,10 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Star, Film, Users, Trophy } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { getRecruitmentStatus, updateRecruitmentStatus } from '@/lib/data/setting-queries';
-import { getMembersStats } from '@/lib/members/getMembers';
-import { getLeaderboardStats } from '@/lib/data/leaderboard-queries';
-import { getProjectsStats } from '@/lib/projects/getProjects';
+import { getRecruitmentStatus, updateRecruitmentStatus } from '@/lib/actions/settings/recruitment-status';
+import { getMembersStats } from '@/lib/actions/members/get-members';
+import { getLeaderboardStats } from '@/lib/actions/leaderboard/get-leaderboard';
+import { getProjectsStats } from '@/lib/actions/projects/get-projects';
 import { toast } from 'sonner';
 
 // Static UI Config
