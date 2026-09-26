@@ -63,11 +63,6 @@ export default function Footer() {
                     Projects
                   </Link>
                 </li>
-                <li>
-                  <Link href="/leaderboards" className="hover:text-pd-purple transition-colors">
-                    Leaderboards
-                  </Link>
-                </li>
               </ul>
             </div>
 
