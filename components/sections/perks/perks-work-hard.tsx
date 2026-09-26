@@ -16,7 +16,7 @@ import Autoplay from "embla-carousel-autoplay";
 
 function PerksWorkHard() {
   const [api, setApi] = React.useState<CarouselApi>();
-  const plugin = React.useRef(
+  const [autoplay] = React.useState(() =>
     Autoplay({ delay: 2000, stopOnInteraction: true })
   );
 
@@ -55,7 +55,7 @@ function PerksWorkHard() {
               align: "start",
               loop: true,
             }}
-            plugins={[plugin.current]}
+            plugins={[autoplay]}
             className="w-full max-w-5xl mx-auto mt-12"
           >
             <CarouselContent className="-ml-2 md:-ml-4">

@@ -2,10 +2,10 @@
 
 import React, { useState, useCallback } from "react";
 import { Label } from "@/components/ui/label"
-import AddProjectMenu from "@/components/sections/admin/projects/AddProjectMenu";
-import ProjectsListView from "@/components/sections/admin/projects/ProjectsListView";
-import ShowFeaturedProjects from "@/components/sections/admin/projects/ShowFeaturedProjects";
-import ShowActiveShowcase from "@/components/sections/admin/projects/ShowActiveShowcase";
+import AddProjectMenu from "@/components/sections/admin/project/add-project-menu";
+import ProjectsListView from "@/components/sections/admin/project/projects-list-view";
+import ShowFeaturedProjects from "@/components/sections/admin/project/show-featured-projects";
+import ShowActiveShowcase from "@/components/sections/admin/project/show-active-showcase";
 
 const Page = () => {
   const [refreshKey, setRefreshKey] = useState(0);

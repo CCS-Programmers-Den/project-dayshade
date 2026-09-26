@@ -18,6 +18,32 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## Project Structure
+
+```
+app/                    Routes only (App Router)
+  (auth)/login/           Login page + server action
+  (site)/                 Public pages: about, events, join, leaderboard, perks, projects
+  (status)/               404Page, recruitmentclose, design
+  admin/                  Admin dashboard (auth-guarded by proxy.ts)
+components/
+  ui/                     shadcn/ui primitives
+  magicui/                Magic UI components
+  layout/                 Header, footer, layout wrapper, admin sidebar
+  shared/                 Reusable pieces (glass container, 3D logo, carousel)
+  sections/<page>/        Components for one page, mirroring the route names
+hooks/                  React hooks
+lib/
+  actions/<domain>/       Server actions ("use server"): leaderboard, members, projects, settings
+  supabase/               Supabase clients (browser, server, proxy session)
+  validation/             Zod schemas
+  constants/              Static content (team members, technologies, stats)
+styles/globals.css      Tailwind + theme tokens
+proxy.ts                Request proxy (formerly middleware): auth + route rewrites
+```
+
+File names use `kebab-case`.
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More

@@ -1,18 +1,15 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { getCurrentShowcase } from "@/lib/projects/getCurrentShowcase";
+import { getCurrentShowcase } from "@/lib/actions/projects/get-current-showcase";
+import { useMounted } from "@/hooks/use-mounted";
 import * as React from "react";
 import { motion } from "framer-motion";
 
 export function MonthlyShowcase() {
 
     const [project, setProject] = useState<any | null>(null);
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-      setMounted(true);
-    }, []);
+    const mounted = useMounted();
 
     useEffect(() => {
       async function load() {

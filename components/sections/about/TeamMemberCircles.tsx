@@ -2,8 +2,8 @@
 
 import React from 'react';
 import Image from 'next/image';
-import TeamMemberCard from './TeamMemberCard';
-import { teamMembers } from '@/data/teamMembers';
+import TeamMemberCard from './team-member-card';
+import { teamMembers } from '@/lib/constants/team-members';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 
 export const TeamMemberCircles = () => {
