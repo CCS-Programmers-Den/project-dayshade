@@ -17,9 +17,9 @@ export function NavbarDemo() {
   const navItems = [
     { name: "Home", link: "/" },
     { name: "About", link: "/about" },
+    { name: "Events", link: "/events" },
     { name: "Perks", link: "/perks" },
     { name: "Projects", link: "/projects" },
-    { name: "Leaderboard", link: "/leaderboard" },
     // { name: "Design System", link: "/design" },
     // { name: "Admin", link: "/admin" },
   ];
