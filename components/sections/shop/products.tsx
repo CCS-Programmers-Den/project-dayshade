@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { GlassContainer } from "@/components/shared/glass-container";
-import ProductCard from "./product-card";
-import CatalogCarousel from "./catalog-carousel";
+import ProductsClient from "./products-client";
+
+export type ProductCategoryType = "shirts" | "hoodies" | "lanyards";
 
 export interface ProductItem {
     id: string;
@@ -10,6 +11,7 @@ export interface ProductItem {
     imageSrc?: string;
     price?: string | number;
     featuredOrder?: number | null; // If null, it's not featured
+    category?: ProductCategoryType;
 }
 
 // Sample Data / Fallback Data
@@ -20,6 +22,7 @@ const DEFAULT_PRODUCTS: ProductItem[] = [
         description: "Lorem ipsum dolor sit amet consectetur adipiscing elit",
         imageSrc: "/assets/600x400.png",
         featuredOrder: 1,
+        category: "shirts",
     },
     {
         id: "feat-2",
@@ -27,27 +30,30 @@ const DEFAULT_PRODUCTS: ProductItem[] = [
         description: "Lorem ipsum dolor sit amet consectetur adipiscing elit",
         imageSrc: "/assets/600x400.png",
         featuredOrder: 2,
+        category: "shirts",
     },
     {
         id: "feat-3",
-        title: "PROGDEN TSHIRT",
+        title: "PROGDEN HOODIE",
         description: "Lorem ipsum dolor sit amet consectetur adipiscing elit",
         imageSrc: "/assets/600x400.png",
         featuredOrder: 3,
+        category: "hoodies",
     },
     {
         id: "feat-4",
-        title: "PROGDEN TSHIRT",
+        title: "PROGDEN LANYARD",
         description: "Lorem ipsum dolor sit amet consectetur adipiscing elit",
         imageSrc: "/assets/600x400.png",
         featuredOrder: 4,
+        category: "lanyards",
     },
-    { id: "cat-1", title: "PROGDEN TSHIRT", imageSrc: "/assets/400x400.png" },
-    { id: "cat-2", title: "PROGDEN TSHIRT", imageSrc: "/assets/400x400.png" },
-    { id: "cat-3", title: "PROGDEN TSHIRT", imageSrc: "/assets/400x400.png" },
-    { id: "cat-4", title: "PROGDEN TSHIRT", imageSrc: "/assets/400x400.png" },
-    { id: "cat-5", title: "PROGDEN TSHIRT", imageSrc: "/assets/400x400.png" },
-    { id: "cat-6", title: "PROGDEN TSHIRT", imageSrc: "/assets/400x400.png" },
+    { id: "cat-1", title: "PROGDEN TSHIRT", imageSrc: "/assets/400x400.png", category: "shirts" },
+    { id: "cat-2", title: "PROGDEN TSHIRT", imageSrc: "/assets/400x400.png", category: "shirts" },
+    { id: "cat-3", title: "PROGDEN HOODIE", imageSrc: "/assets/400x400.png", category: "hoodies" },
+    { id: "cat-4", title: "PROGDEN HOODIE", imageSrc: "/assets/400x400.png", category: "hoodies" },
+    { id: "cat-5", title: "PROGDEN LANYARD", imageSrc: "/assets/400x400.png", category: "lanyards" },
+    { id: "cat-6", title: "PROGDEN LANYARD", imageSrc: "/assets/400x400.png", category: "lanyards" },
 ];
 
 export interface ProductsProps {
@@ -57,6 +63,7 @@ export interface ProductsProps {
 export default function Products({
     products = DEFAULT_PRODUCTS,
 }: ProductsProps) {
+    // Single pass: split into featured and catalog (js-combine-iterations)
     const featuredProducts: ProductItem[] = [];
     const catalogProducts: ProductItem[] = [];
 
@@ -69,66 +76,35 @@ export default function Products({
     }
 
     featuredProducts.sort((a, b) => (a.featuredOrder ?? 0) - (b.featuredOrder ?? 0));
-    const allProductsSorted = [...featuredProducts, ...catalogProducts];
 
     return (
         <GlassContainer className="p-4 sm:p-6 md:p-10 w-full overflow-hidden">
             <div className="w-full flex flex-col items-center">
-                {/* Desktop View */}
-                <div className="hidden md:flex flex-col items-center w-full gap-16 md:gap-24">
-                    <div className="flex flex-col items-center gap-4">
+                {/* Section Header */}
+                <div className="flex flex-col items-center gap-4 mb-6 md:mb-10">
+                    {/* Desktop Logo */}
+                    <div className="hidden md:block">
                         <Image src="/assets/pd-logo.png" alt="PD Logo" width={200} height={200} />
-                        <h1 className="text-4xl font-bold">All Products</h1>
                     </div>
-
-                    {/* Featured Products Grid */}
-                    <div className="w-full max-w-[1204px]">
-                        <div className="grid grid-cols-2 gap-8 lg:gap-x-[68px] lg:gap-y-[88px] w-full justify-items-center">
-                            {featuredProducts.slice(0, 4).map((product) => (
-                                <ProductCard
-                                    key={product.id}
-                                    variant="large"
-                                    title={product.title}
-                                    description={product.description}
-                                    imageSrc={product.imageSrc}
-                                />
-                            ))}
-                        </div>
+                    {/* Mobile Logo */}
+                    <div className="relative w-[62px] h-[62px] md:hidden">
+                        <Image
+                            src="/assets/pd-logo.png"
+                            alt="Programmers' Den Logo"
+                            fill
+                            className="object-contain"
+                        />
                     </div>
-
-                    {/* Catalog Carousel (Client Component) */}
-                    <CatalogCarousel products={catalogProducts} />
+                    <h1 className="text-white font-bold text-2xl md:text-4xl leading-[22px]">
+                        All Products
+                    </h1>
                 </div>
 
-                {/* Mobile View */}
-                <div className="flex md:hidden flex-col items-center w-full gap-6">
-                    {/* Section Header */}
-                    <div className="flex flex-col items-center text-center gap-2">
-                        <div className="relative w-[62px] h-[62px]">
-                            <Image
-                                src="/assets/pd-logo.png"
-                                alt="Programmers' Den Logo"
-                                fill
-                                className="object-contain"
-                            />
-                        </div>
-                        <h1 className="text-white font-bold text-2xl leading-[22px]">
-                            All Products
-                        </h1>
-                    </div>
-
-                    {/* Products List */}
-                    <div className="grid grid-cols-1 min-[320px]:grid-cols-2 gap-4 gap-y-6 sm:gap-y-10 sm:gap-5 w-full">
-                        {allProductsSorted.map((product) => (
-                            <ProductCard
-                                key={product.id}
-                                variant="mobile"
-                                title={product.title}
-                                imageSrc={product.imageSrc}
-                            />
-                        ))}
-                    </div>
-                </div>
+                {/* Interactive section — client boundary */}
+                <ProductsClient
+                    featuredProducts={featuredProducts}
+                    catalogProducts={catalogProducts}
+                />
             </div>
         </GlassContainer>
     );
