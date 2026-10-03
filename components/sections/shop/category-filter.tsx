@@ -47,15 +47,22 @@ export default function CategoryFilter({
                         key={value}
                         onClick={() => onCategoryChange(value)}
                         className={cn(
-                            "flex items-center justify-center px-[30px] h-[60px] text-lg font-medium cursor-pointer",
-                            "transition-colors duration-150",
+                            "group relative flex items-center justify-center px-[30px] h-[60px] text-lg font-medium cursor-pointer overflow-hidden",
                             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pd-green/50 focus-visible:ring-inset",
+                            "transition-colors duration-300 ease-in-out",
                             activeCategory === value
-                                ? "bg-gradient-to-b from-[#3FD89A] to-[#27B97C] text-[#04170C]"
-                                : "text-[#A78BFA] hover:text-[#c4abff]"
+                                ? "text-[#04170C]"
+                                : "text-[#A78BFA] hover:text-[#04170C]"
                         )}
                     >
-                        {label}
+                        <span
+                            aria-hidden="true"
+                            className={cn(
+                                "absolute inset-0 bg-gradient-to-b from-[#3FD89A] to-[#27B97C] transition-opacity duration-300 ease-in-out pointer-events-none",
+                                activeCategory === value ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                            )}
+                        />
+                        <span className="relative z-10">{label}</span>
                     </button>
                 ))}
             </div>
