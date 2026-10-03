@@ -8,7 +8,7 @@ export default function ClosedRecruitment() {
     <div className="min-h-screen bg-gradient-to-br from-[var(--background)/60] to-[var(--sidebar)/30] flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center">
         <Image
-          src="/assets/star-3.png"
+          src="/assets/Star-3.png"
           alt="decorative star"
           width={320}
           height={320}
@@ -16,7 +16,7 @@ export default function ClosedRecruitment() {
           unoptimized
         />
         <Image
-          src="/assets/star-4.png"
+          src="/assets/Star-4.png"
           alt="decorative star"
           width={384}
           height={384}

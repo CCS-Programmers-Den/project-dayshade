@@ -31,7 +31,7 @@ export default function TeamSection() {
 
 
 					{/* Button for Desktop Layout */}
-					<div className="hidden lg:block absolute top-8 right-8">
+					{/* <div className="hidden lg:block absolute top-8 right-8">
 						<Dialog >
 							<DialogTitle></DialogTitle>
 							<DialogTrigger asChild>
@@ -51,11 +51,11 @@ export default function TeamSection() {
 								</DialogFooter>
 							</DialogContent>
 						</Dialog>
-					</div>
+					</div> */}
 
 
 					{/* Button for Mobile Layout */}
-					<div className="lg:hidden flex items-center justify-center my-12">
+					{/* <div className="lg:hidden flex items-center justify-center my-12">
 						<Dialog >
 							<DialogTitle></DialogTitle>
 							<DialogTrigger asChild>
@@ -75,7 +75,7 @@ export default function TeamSection() {
 								</DialogFooter>
 							</DialogContent>
 						</Dialog>
-					</div>
+					</div> */}
 
 					{/* Mobile Layout */}
 					<div className=" lg:hidden items-center justify-center mx-auto flex">

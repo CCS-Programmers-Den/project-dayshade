@@ -31,7 +31,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 3,
-    name: 'Kyran Emanuel Solomon',
+    name: 'Kyran Emmanuel Solomon',
     title: 'Executive Secretary',
     image: 'assets/profile/sec-kyran.jpg',
     socials: {
@@ -51,7 +51,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 5,
-    name: 'Christian Kevin Mecate',
+    name: 'Christian Kevin Macale',
     title: 'VP of Multimedia',
     image: 'assets/profile/vp-mm-christian.png',
     socials: {
@@ -61,7 +61,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 6,
-    name: 'Carl Lawrence Maldong',
+    name: 'Carl Lawrence Muldong',
     title: 'VP of Competitive Programming',
     image: 'assets/profile/vp-compe-carl.jpg',
     socials: {
@@ -80,7 +80,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 8,
-    name: 'Neo Snifer Matias',
+    name: 'Neo Seifer Matias',
     title: 'Head of Human Resources',
     image: 'assets/profile/head-hr-neo.png',
     socials: {
@@ -90,7 +90,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 9,
-    name: 'Elton John Lennan Bundukin',
+    name: 'Elton John Lennon Bundukin',
     title: 'Head of Recruitment',
     image: 'assets/profile/head-recruitment.jpg',
     socials: {
@@ -100,7 +100,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 10,
-    name: 'Menard Manlutac',
+    name: 'Mennard Ezekiel Manlutac',
     title: 'Head of Communications',
     image: 'assets/profile/head-comm-mennard.png',
     socials: {
@@ -120,7 +120,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 12,
-    name: 'Luis Armando Barba',
+    name: 'Luis Armann Barba',
     title: 'Secretary of Finances',
     image: 'assets/profile/sec-finance-luis.jpg',
     socials: {
@@ -140,9 +140,9 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 14,
-    name: 'Mharl Vincent Aquilos',
+    name: 'Mharl Vincent Aguilos',
     title: 'Social Media Manager',
-    image: 'assets/profile/socmed-manager-mharl.png',
+    image: 'assets/profile/socmed-manager-mharl.jpg',
     socials: {
       github: 'https://github.com/danimaaru',
       email: 'mailto:mharlvincentaguilos@gmail.com',

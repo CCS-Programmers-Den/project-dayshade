@@ -135,6 +135,7 @@
     @apply border-border outline-ring/50;
     font-family: "League Spartan", sans-serif;
   }
+
   body {
     @apply bg-background text-foreground;
     overflow-x: hidden;
@@ -200,6 +201,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

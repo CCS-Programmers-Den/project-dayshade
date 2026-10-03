@@ -25,7 +25,6 @@ export default function FeaturedProjectsView() {
       }
       loadProjects();
     }, []);
-
   //removes the duplicate projects by youtube id and keep the newest by published_date
   const uniqueProjects: typeof projects = Object.values(
     projects.reduce((acc: Record<string, typeof projects[number]>, p) => {

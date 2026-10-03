@@ -9,6 +9,9 @@ export async function middleware(request: NextRequest) {
       return NextResponse.rewrite(new URL("/recruitmentclose", request.url));
     }
   }
+  if (request.nextUrl.pathname === "/leaderboard") {
+      return NextResponse.rewrite(new URL("/404Page", request.url));
+  }
   return await updateSession(request);
 }
 
