@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { GlassContainer } from "@/components/shared/glass-container";
+import ShopLogo3D from "./shop-logo-3d";
 import ProductsClient from "./products-client";
 
 export type ProductCategoryType = "shirts" | "hoodies" | "lanyards";
@@ -82,20 +82,8 @@ export default function Products({
             <div className="w-full flex flex-col items-center">
                 {/* Section Header */}
                 <div className="flex flex-col items-center gap-4 mb-6 md:mb-10">
-                    {/* Desktop Logo */}
-                    <div className="hidden md:block">
-                        <Image src="/assets/pd-logo.png" alt="PD Logo" width={200} height={200} />
-                    </div>
-                    {/* Mobile Logo */}
-                    <div className="relative w-[62px] h-[62px] md:hidden">
-                        <Image
-                            src="/assets/pd-logo.png"
-                            alt="Programmers' Den Logo"
-                            fill
-                            className="object-contain"
-                        />
-                    </div>
-                    <h1 className="text-white font-bold text-2xl md:text-4xl leading-[22px]">
+                    <ShopLogo3D />
+                    <h1 className="text-white font-bold text-2xl md:text-4xl leading-tight text-center">
                         All Products
                     </h1>
                 </div>

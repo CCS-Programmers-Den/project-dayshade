@@ -20,6 +20,7 @@ export function NavbarDemo() {
     { name: "Events", link: "/events" },
     { name: "Perks", link: "/perks" },
     { name: "Projects", link: "/projects" },
+    { name: "Shop", link: "/shop" },
     // { name: "Design System", link: "/design" },
     // { name: "Admin", link: "/admin" },
   ];

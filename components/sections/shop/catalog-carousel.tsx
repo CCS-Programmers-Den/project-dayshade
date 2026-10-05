@@ -5,6 +5,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import ProductCard from "./product-card";
 import type { ProductItem } from "./products";
 
+const CARD_GAP = 24; // matches gap-6 on the track
+
 export interface CatalogCarouselProps {
     products: ProductItem[];
 }
@@ -16,7 +18,7 @@ export default function CatalogCarousel({ products }: CatalogCarouselProps) {
     const scrollLeft = useRef(0);
 
     const [canScrollLeft, setCanScrollLeft] = useState(false);
-    const [canScrollRight, setCanScrollRight] = useState(true);
+    const [canScrollRight, setCanScrollRight] = useState(false);
 
     const checkScroll = useCallback(() => {
         if (!scrollContainerRef.current) return;
@@ -26,19 +28,42 @@ export default function CatalogCarousel({ products }: CatalogCarouselProps) {
     }, []);
 
     useEffect(() => {
+        const node = scrollContainerRef.current;
+        if (!node) return;
+
         checkScroll();
-        window.addEventListener("resize", checkScroll, { passive: true });
-        return () => window.removeEventListener("resize", checkScroll);
+
+        // Track both viewport resizes and container/content size changes.
+        const observer = new ResizeObserver(checkScroll);
+        observer.observe(node);
+        const track = node.firstElementChild;
+        if (track) observer.observe(track);
+
+        return () => observer.disconnect();
     }, [checkScroll, products.length]);
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-        if (!scrollContainerRef.current) return;
+    /** One card plus its gap, so arrows always land on a card boundary. */
+    const getScrollStep = () => {
+        const card = scrollContainerRef.current?.querySelector<HTMLElement>("[data-catalog-card]");
+        return card ? card.offsetWidth + CARD_GAP : 244;
+    };
+
+    const scrollByStep = (direction: -1 | 1) => {
+        scrollContainerRef.current?.scrollBy({
+            left: direction * getScrollStep(),
+            behavior: "smooth",
+        });
+    };
+
+    const handlePointerDown = (e: React.PointerEvent) => {
+        // Let touch devices use native momentum scrolling.
+        if (e.pointerType !== "mouse" || !scrollContainerRef.current) return;
         isDragging.current = true;
         startX.current = e.pageX - scrollContainerRef.current.offsetLeft;
         scrollLeft.current = scrollContainerRef.current.scrollLeft;
     };
 
-    const handleMouseMove = (e: React.MouseEvent) => {
+    const handlePointerMove = (e: React.PointerEvent) => {
         if (!isDragging.current || !scrollContainerRef.current) return;
         e.preventDefault();
         const x = e.pageX - scrollContainerRef.current.offsetLeft;
@@ -47,49 +72,54 @@ export default function CatalogCarousel({ products }: CatalogCarouselProps) {
         checkScroll();
     };
 
-    const handleMouseUpOrLeave = () => {
+    const handlePointerUpOrLeave = () => {
         isDragging.current = false;
         checkScroll();
     };
 
-    const handleScrollLeft = () => {
-        if (scrollContainerRef.current) {
-            scrollContainerRef.current.scrollBy({
-                left: -312,
-                behavior: "smooth",
-            });
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            scrollByStep(-1);
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            scrollByStep(1);
         }
     };
 
-    const handleScrollRight = () => {
-        if (scrollContainerRef.current) {
-            scrollContainerRef.current.scrollBy({
-                left: 312,
-                behavior: "smooth",
-            });
-        }
-    };
+    const navButtonClasses =
+        "absolute top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full cursor-pointer transition-all duration-200 motion-safe:hover:scale-110 active:scale-95 bg-[#141c16] border-2 border-pd-green shadow-[0_0_15px_rgba(74,238,152,0.2)] hover:shadow-[0_0_22px_rgba(74,238,152,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pd-green focus-visible:ring-offset-2 focus-visible:ring-offset-[#141c16]";
 
     return (
-        <div className="relative w-full overflow-hidden">
+        <div
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Product catalog"
+            className="relative w-full overflow-hidden"
+        >
             {/* Scrollable Track */}
             <div
                 ref={scrollContainerRef}
+                tabIndex={0}
+                aria-label="Product catalog items, use arrow keys to scroll"
                 onScroll={checkScroll}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUpOrLeave}
-                onMouseLeave={handleMouseUpOrLeave}
-                className="overflow-x-auto overflow-y-visible no-scrollbar scroll-smooth px-2 py-1 cursor-grab active:cursor-grabbing select-none touch-pan-x"
+                onKeyDown={handleKeyDown}
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUpOrLeave}
+                onPointerLeave={handlePointerUpOrLeave}
+                onPointerCancel={handlePointerUpOrLeave}
+                className="overflow-x-auto overflow-y-visible no-scrollbar scroll-smooth px-2 py-1 cursor-grab active:cursor-grabbing select-none touch-pan-x focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pd-green/40 focus-visible:ring-inset rounded-[10px]"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
-                <div className="flex items-center gap-8 w-fit mx-auto">
+                <div className="flex items-stretch gap-6 w-fit mx-auto">
                     {products.map((product) => (
-                        <div key={product.id} className="flex-shrink-0">
+                        <div key={product.id} data-catalog-card className="flex-shrink-0">
                             <ProductCard
                                 variant="small"
                                 title={product.title}
                                 imageSrc={product.imageSrc}
+                                price={product.price}
                             />
                         </div>
                     ))}
@@ -98,7 +128,8 @@ export default function CatalogCarousel({ products }: CatalogCarouselProps) {
 
             {/* Left Gradient Fade Overlay */}
             <div
-                className={`pointer-events-none absolute left-0 top-0 bottom-0 w-[140px] sm:w-[180px] z-10 transition-opacity duration-300 ${canScrollLeft ? "opacity-100" : "opacity-0"
+                aria-hidden="true"
+                className={`pointer-events-none absolute left-0 top-0 bottom-0 w-[100px] sm:w-[150px] z-10 transition-opacity duration-300 ${canScrollLeft ? "opacity-100" : "opacity-0"
                     }`}
                 style={{
                     background:
@@ -108,17 +139,20 @@ export default function CatalogCarousel({ products }: CatalogCarouselProps) {
 
             {/* Left Navigation Button */}
             <button
-                onClick={handleScrollLeft}
+                type="button"
+                onClick={() => scrollByStep(-1)}
                 aria-label="Scroll products left"
-                className={`absolute left-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 bg-[#141c16] border-2 border-pd-green shadow-[0_0_15px_rgba(74,238,152,0.2)] ${canScrollLeft ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                tabIndex={canScrollLeft ? 0 : -1}
+                className={`${navButtonClasses} left-2 sm:left-4 ${canScrollLeft ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                     }`}
             >
-                <ArrowLeft className="w-5 h-5 text-pd-green stroke-[2]" />
+                <ArrowLeft className="w-5 h-5 text-pd-green stroke-[2]" aria-hidden="true" />
             </button>
 
             {/* Right Gradient Fade Overlay */}
             <div
-                className={`pointer-events-none absolute right-0 top-0 bottom-0 w-[140px] sm:w-[180px] z-10 transition-opacity duration-300 ${canScrollRight ? "opacity-100" : "opacity-0"
+                aria-hidden="true"
+                className={`pointer-events-none absolute right-0 top-0 bottom-0 w-[100px] sm:w-[150px] z-10 transition-opacity duration-300 ${canScrollRight ? "opacity-100" : "opacity-0"
                     }`}
                 style={{
                     background:
@@ -128,14 +162,15 @@ export default function CatalogCarousel({ products }: CatalogCarouselProps) {
 
             {/* Right Navigation Button */}
             <button
-                onClick={handleScrollRight}
+                type="button"
+                onClick={() => scrollByStep(1)}
                 aria-label="Scroll products right"
-                className={`absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 bg-[#141c16] border-2 border-pd-green shadow-[0_0_15px_rgba(74,238,152,0.2)] ${canScrollRight ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                tabIndex={canScrollRight ? 0 : -1}
+                className={`${navButtonClasses} right-2 sm:right-4 ${canScrollRight ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                     }`}
             >
-                <ArrowRight className="w-5 h-5 text-pd-green stroke-[2]" />
+                <ArrowRight className="w-5 h-5 text-pd-green stroke-[2]" aria-hidden="true" />
             </button>
         </div>
     );
 }
-
