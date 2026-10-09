@@ -1,9 +1,9 @@
 
 "use client";
 
+import { EVENTS_DATA, getVisibleEventsData } from "@/data/events-data";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { EVENTS_DATA, getVisibleEventsData } from "@/data/events-data";
 import EventsTimelineView from "./events-timeline-view";
 import EventsYearOverview from "./events-year-overview";
 
@@ -30,7 +30,10 @@ export default function EventsMain() {
   };
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden">
+    <div
+      className="relative w-full min-h-screen overflow-hidden"
+      data-nav-tone="light"
+    >
       {/* Deep base under glass */}
       <div className="absolute inset-0 bg-[#101012] -z-30 pointer-events-none" />
 

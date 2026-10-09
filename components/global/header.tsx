@@ -11,21 +11,27 @@ import {
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export function NavbarDemo() {
-  const navItems = [
-    { name: "Home", link: "/" },
-    { name: "About", link: "/about" },
-    { name: "Events", link: "/events" },
-    { name: "Perks", link: "/perks" },
-    { name: "Projects", link: "/projects" },
-    { name: "Shop", link: "/shop" },
+  const navItems: {
+    name: string;
+    link: string;
+    tone: "purple" | "green";
+  }[] = [
+    { name: "Home", link: "/", tone: "green" },
+    { name: "About", link: "/about", tone: "green" },
+    { name: "Events", link: "/events", tone: "green" },
+    { name: "Perks", link: "/perks", tone: "green" },
+    { name: "Projects", link: "/projects", tone: "green" },
+    { name: "Leaderboard", link: "/leaderboard", tone: "green" },
     // { name: "Design System", link: "/design" },
     // { name: "Admin", link: "/admin" },
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div className="relative w-full z-50 ">
@@ -34,7 +40,7 @@ export function NavbarDemo() {
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />
-          <NavbarButton variant="primary" href="/join">
+          <NavbarButton variant="pill" href="/join">
             Join now
           </NavbarButton>
         </NavBody>
@@ -53,21 +59,31 @@ export function NavbarDemo() {
             isOpen={isMobileMenuOpen}
             onClose={() => setIsMobileMenuOpen(false)}
           >
-            {navItems.map((item, idx) => (
-              <Link
-                key={`mobile-link-${idx}`}
-                href={item.link}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="relative w-full text-center"
-              >
-                <span className="block">{item.name}</span>
-              </Link>
-            ))}
+            {navItems.map((item, idx) => {
+              const active =
+                item.link === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.link);
+              return (
+                <Link
+                  key={`mobile-link-${idx}`}
+                  href={item.link}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="pd-nav-pill h-10 w-full text-base"
+                  data-active={active}
+                  aria-current={active ? "page" : undefined}
+                >
+                  <span className="pd-nav-text" data-tone={item.tone}>
+                    {item.name}
+                  </span>
+                </Link>
+              );
+            })}
             <div className="flex w-full flex-col gap-4">
               <NavbarButton
-                 href="/join"
-                variant="primary"
-                className="w-full"
+                href="/join"
+                variant="pill"
+                className="w-full !h-10 !text-base"
               >
                 Join now
               </NavbarButton>
