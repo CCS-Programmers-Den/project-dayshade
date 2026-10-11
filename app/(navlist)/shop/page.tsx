@@ -1,7 +1,12 @@
 import FeaturedCard from "@/components/sections/shop/featured-card";
 import Products from "@/components/sections/shop/products";
+import { getProducts } from "@/lib/products/queries";
+import { toProductItem } from "@/components/sections/shop/products";
 
-export default function ShopPage() {
+export default async function ShopPage() {
+    const products = await getProducts()
+        .then((items) => items.map(toProductItem))
+        .catch(() => []);
     return (
         <>
             {/* Hero Section */}
@@ -63,7 +68,7 @@ export default function ShopPage() {
 
                 {/* Content */}
                 <div className="relative z-10 w-full flex justify-center">
-                    <Products />
+                    <Products products={products} />
                 </div>
             </div>
         </>

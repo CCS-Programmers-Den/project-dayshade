@@ -25,7 +25,7 @@ export function NavbarDemo() {
     { name: "Events", link: "/events", tone: "green" },
     { name: "Perks", link: "/perks", tone: "green" },
     { name: "Projects", link: "/projects", tone: "green" },
-    { name: "Leaderboard", link: "/leaderboard", tone: "green" },
+    { name: "Shop", link: "/shop", tone: "green" },
     // { name: "Design System", link: "/design" },
     // { name: "Admin", link: "/admin" },
   ];
