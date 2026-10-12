@@ -1,6 +1,7 @@
 import { GlassContainer } from "@/components/shared/glass-container";
 import ShopLogo3D from "./shop-logo-3d";
 import ProductsClient from "./products-client";
+import type { Product } from "@/lib/products/queries";
 
 export type ProductCategoryType = "shirts" | "hoodies" | "lanyards";
 
@@ -14,54 +15,12 @@ export interface ProductItem {
     category?: ProductCategoryType;
 }
 
-// Sample Data / Fallback Data
-const DEFAULT_PRODUCTS: ProductItem[] = [
-    {
-        id: "feat-1",
-        title: "PROGDEN TSHIRT",
-        description: "Lorem ipsum dolor sit amet consectetur adipiscing elit",
-        imageSrc: "/assets/600x400.png",
-        featuredOrder: 1,
-        category: "shirts",
-    },
-    {
-        id: "feat-2",
-        title: "PROGDEN TSHIRT",
-        description: "Lorem ipsum dolor sit amet consectetur adipiscing elit",
-        imageSrc: "/assets/600x400.png",
-        featuredOrder: 2,
-        category: "shirts",
-    },
-    {
-        id: "feat-3",
-        title: "PROGDEN HOODIE",
-        description: "Lorem ipsum dolor sit amet consectetur adipiscing elit",
-        imageSrc: "/assets/600x400.png",
-        featuredOrder: 3,
-        category: "hoodies",
-    },
-    {
-        id: "feat-4",
-        title: "PROGDEN LANYARD",
-        description: "Lorem ipsum dolor sit amet consectetur adipiscing elit",
-        imageSrc: "/assets/600x400.png",
-        featuredOrder: 4,
-        category: "lanyards",
-    },
-    { id: "cat-1", title: "PROGDEN TSHIRT", imageSrc: "/assets/400x400.png", category: "shirts" },
-    { id: "cat-2", title: "PROGDEN TSHIRT", imageSrc: "/assets/400x400.png", category: "shirts" },
-    { id: "cat-3", title: "PROGDEN HOODIE", imageSrc: "/assets/400x400.png", category: "hoodies" },
-    { id: "cat-4", title: "PROGDEN HOODIE", imageSrc: "/assets/400x400.png", category: "hoodies" },
-    { id: "cat-5", title: "PROGDEN LANYARD", imageSrc: "/assets/400x400.png", category: "lanyards" },
-    { id: "cat-6", title: "PROGDEN LANYARD", imageSrc: "/assets/400x400.png", category: "lanyards" },
-];
-
 export interface ProductsProps {
-    products?: ProductItem[];
+    products: ProductItem[];
 }
 
 export default function Products({
-    products = DEFAULT_PRODUCTS,
+    products,
 }: ProductsProps) {
     // Single pass: split into featured and catalog (js-combine-iterations)
     const featuredProducts: ProductItem[] = [];
@@ -96,4 +55,16 @@ export default function Products({
             </div>
         </GlassContainer>
     );
+}
+
+export function toProductItem(product: Product): ProductItem {
+    return {
+        id: product.id,
+        title: product.title,
+        description: product.description ?? undefined,
+        imageSrc: product.image_url ?? undefined,
+        price: product.price ?? undefined,
+        featuredOrder: product.featured_order,
+        category: product.category,
+    };
 }
