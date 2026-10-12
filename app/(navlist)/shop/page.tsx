@@ -15,7 +15,7 @@ export default async function ShopPage() {
             </div>
 
             {/* Products Section */}
-            <div className="relative w-full overflow-hidden min-h-screen px-4 md:px-12 py-16 lg:py-24">
+            <div className="relative w-full overflow-hidden px-4 md:px-12 py-16 lg:py-24">
                 {/* Background Gradients */}
                 <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
                     {/* Primary Glow */}

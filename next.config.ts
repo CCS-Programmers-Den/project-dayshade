@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      // Default is 1MB, which rejects most photo uploads. Slightly above the 5MB image cap.
+      bodySizeLimit: "6mb",
+    },
+  },
   images: {
     unoptimized: true,
     formats: ["image/webp", "image/avif"],
