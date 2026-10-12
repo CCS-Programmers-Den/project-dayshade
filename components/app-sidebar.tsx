@@ -29,6 +29,7 @@ const navMain = [
       { title: "Recruitment", url: "/admin/recruitment" },
       { title: "Project", url: "/admin/project" },
       { title: "Shop Products", url: "/admin/products" },
+      { title: "Shop Orders", url: "/admin/orders" },
       { title: "Leaderboard", url: "/admin/leaderboard" },
     ],
   },

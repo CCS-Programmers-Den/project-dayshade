@@ -1,12 +1,17 @@
 import FeaturedCard from "@/components/sections/shop/featured-card";
 import Products from "@/components/sections/shop/products";
 import { getProducts } from "@/lib/products/queries";
+import { getPaymentDetails } from "@/lib/orders/queries";
 import { toProductItem } from "@/components/sections/shop/products";
 
 export default async function ShopPage() {
     const products = await getProducts()
         .then((items) => items.map(toProductItem))
         .catch(() => []);
+
+    // GCash account buyers send their payment to (set in Admin > Shop Orders).
+    const payment = await getPaymentDetails();
+
     return (
         <>
             {/* Hero Section */}
@@ -15,7 +20,7 @@ export default async function ShopPage() {
             </div>
 
             {/* Products Section */}
-            <div className="relative w-full overflow-hidden min-h-screen px-4 md:px-12 py-16 lg:py-24">
+            <div className="relative w-full overflow-hidden px-4 md:px-12 py-16 lg:py-24">
                 {/* Background Gradients */}
                 <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
                     {/* Primary Glow */}
@@ -68,7 +73,7 @@ export default async function ShopPage() {
 
                 {/* Content */}
                 <div className="relative z-10 w-full flex justify-center">
-                    <Products products={products} />
+                    <Products products={products} payment={payment} />
                 </div>
             </div>
         </>

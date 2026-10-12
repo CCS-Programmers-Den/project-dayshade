@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import ProductCard from "./product-card";
 import type { ProductItem } from "./products";
+import { useCart } from "./cart-context";
 
 const CARD_GAP = 24; // matches gap-6 on the track
 
@@ -12,6 +13,7 @@ export interface CatalogCarouselProps {
 }
 
 export default function CatalogCarousel({ products }: CatalogCarouselProps) {
+    const { add, qtyOf } = useCart();
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
     const startX = useRef(0);
@@ -95,7 +97,7 @@ export default function CatalogCarousel({ products }: CatalogCarouselProps) {
             role="region"
             aria-roledescription="carousel"
             aria-label="Product catalog"
-            className="relative w-full overflow-hidden"
+            className="relative w-full"
         >
             {/* Scrollable Track */}
             <div
@@ -109,7 +111,7 @@ export default function CatalogCarousel({ products }: CatalogCarouselProps) {
                 onPointerUp={handlePointerUpOrLeave}
                 onPointerLeave={handlePointerUpOrLeave}
                 onPointerCancel={handlePointerUpOrLeave}
-                className="overflow-x-auto overflow-y-visible no-scrollbar scroll-smooth px-2 py-1 cursor-grab active:cursor-grabbing select-none touch-pan-x focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pd-green/40 focus-visible:ring-inset rounded-[10px]"
+                className="overflow-x-auto overflow-y-visible no-scrollbar scroll-smooth px-3 pt-6 pb-8 -mt-5 -mb-7 cursor-grab active:cursor-grabbing select-none touch-pan-x focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pd-green/40 focus-visible:ring-inset rounded-[10px]"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
                 <div className="flex items-stretch gap-6 w-fit mx-auto">
@@ -120,6 +122,8 @@ export default function CatalogCarousel({ products }: CatalogCarouselProps) {
                                 title={product.title}
                                 imageSrc={product.imageSrc}
                                 price={product.price}
+                                onClick={product.price != null ? () => add(product) : undefined}
+                                inCart={qtyOf(product.id)}
                             />
                         </div>
                     ))}
