@@ -22,7 +22,6 @@ export function NavbarDemo() {
   }[] = [
     { name: "Home", link: "/", tone: "green" },
     { name: "About", link: "/about", tone: "green" },
-    { name: "Events", link: "/events", tone: "green" },
     { name: "Perks", link: "/perks", tone: "green" },
     { name: "Projects", link: "/projects", tone: "green" },
     { name: "Shop", link: "/shop", tone: "green" },

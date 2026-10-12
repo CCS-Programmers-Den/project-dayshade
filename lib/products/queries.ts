@@ -2,6 +2,10 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+const IMAGE_BUCKET = "projects-image";
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
 export type ProductCategory = "shirts" | "hoodies" | "lanyards";
 
@@ -38,7 +42,8 @@ export async function createProduct(formData: FormData): Promise<ProductActionRe
   try {
     const supabase = await createClient();
     const product = parseProductForm(formData);
-    const { error } = await supabase.from("products").insert(product);
+    const image_url = await uploadProductImage(supabase, formData);
+    const { error } = await supabase.from("products").insert({ ...product, image_url });
 
     if (error) {
       console.error("Error creating product:", error.message);
@@ -57,11 +62,25 @@ export async function updateProduct(formData: FormData): Promise<ProductActionRe
     const supabase = await createClient();
     const id = requiredText(formData, "id");
     const product = parseProductForm(formData);
-    const { error } = await supabase.from("products").update(product).eq("id", id);
+    const newImageUrl = await uploadProductImage(supabase, formData);
+
+    const { data: existing } = await supabase
+      .from("products")
+      .select("image_url")
+      .eq("id", id)
+      .single();
+
+    const { error } = await supabase
+      .from("products")
+      .update(newImageUrl ? { ...product, image_url: newImageUrl } : product)
+      .eq("id", id);
 
     if (error) {
       console.error("Error updating product:", error.message);
       return { error: "Failed to update product" };
+    }
+    if (newImageUrl && existing?.image_url) {
+      await removeProductImage(supabase, existing.image_url);
     }
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Failed to update product" };
@@ -75,12 +94,19 @@ export async function deleteProduct(formData: FormData): Promise<ProductActionRe
   try {
     const supabase = await createClient();
     const id = requiredText(formData, "id");
+    const { data: existing } = await supabase
+      .from("products")
+      .select("image_url")
+      .eq("id", id)
+      .single();
+
     const { error } = await supabase.from("products").delete().eq("id", id);
 
     if (error) {
       console.error("Error deleting product:", error.message);
       return { error: "Failed to delete product" };
     }
+    if (existing?.image_url) await removeProductImage(supabase, existing.image_url);
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Failed to delete product" };
   }
@@ -108,19 +134,39 @@ function parseProductForm(formData: FormData) {
     throw new Error("Featured order must be a positive whole number");
   }
 
-  const image_url = optionalText(formData, "image_url");
-  if (image_url && !/^(https?:\/\/|\/)/.test(image_url)) {
-    throw new Error("Image URL must start with http://, https:// or /");
-  }
-
   return {
     title,
     description: optionalText(formData, "description"),
     category,
     price,
-    image_url,
     featured_order,
   };
+}
+
+async function uploadProductImage(supabase: SupabaseClient, formData: FormData) {
+  const file = formData.get("image");
+  if (!(file instanceof File) || file.size === 0) return null;
+
+  if (!file.type.startsWith("image/")) throw new Error("File must be an image");
+  if (file.size > MAX_IMAGE_SIZE) throw new Error("Image must be 5MB or smaller");
+
+  const filePath = `products/${Date.now()}-${file.name}`;
+  const { error } = await supabase.storage
+    .from(IMAGE_BUCKET)
+    .upload(filePath, file, { cacheControl: "3600", upsert: false });
+
+  if (error) {
+    console.error("Error uploading product image:", error.message);
+    throw new Error("Image upload failed");
+  }
+  return supabase.storage.from(IMAGE_BUCKET).getPublicUrl(filePath).data.publicUrl;
+}
+
+async function removeProductImage(supabase: SupabaseClient, imageUrl: string) {
+  const path = imageUrl.split(`/${IMAGE_BUCKET}/`)[1];
+  if (!path) return;
+  const { error } = await supabase.storage.from(IMAGE_BUCKET).remove([path]);
+  if (error) console.error("Error removing product image:", error.message);
 }
 
 function requiredText(formData: FormData, name: string) {

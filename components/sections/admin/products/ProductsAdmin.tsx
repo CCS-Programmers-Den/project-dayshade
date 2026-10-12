@@ -22,7 +22,6 @@ type ProductForm = {
   description: string;
   category: ProductCategory;
   price: string;
-  image_url: string;
   featured_order: string;
 };
 
@@ -31,27 +30,36 @@ const emptyForm: ProductForm = {
   description: "",
   category: "shirts",
   price: "",
-  image_url: "",
   featured_order: "",
 };
 
 export default function ProductsAdmin({ products }: { products: Product[] }) {
   const [form, setForm] = useState<ProductForm>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [fileInputKey, setFileInputKey] = useState(0);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const updateField = (name: keyof ProductForm, value: string) =>
     setForm((current) => ({ ...current, [name]: value }));
 
+  const resetForm = () => {
+    setEditingId(null);
+    setCurrentImage(null);
+    setForm(emptyForm);
+    setFileInputKey((key) => key + 1);
+  };
+
   const edit = (product: Product) => {
     setEditingId(product.id);
+    setCurrentImage(product.image_url);
+    setFileInputKey((key) => key + 1);
     setForm({
       title: product.title,
       description: product.description ?? "",
       category: product.category,
       price: product.price?.toString() ?? "",
-      image_url: product.image_url ?? "",
       featured_order: product.featured_order?.toString() ?? "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -69,8 +77,7 @@ export default function ProductsAdmin({ products }: { products: Product[] }) {
         return;
       }
       toast.success(editingId ? "Product updated" : "Product created");
-      setEditingId(null);
-      setForm(emptyForm);
+      resetForm();
       router.refresh();
     });
   };
@@ -86,10 +93,7 @@ export default function ProductsAdmin({ products }: { products: Product[] }) {
         return;
       }
       toast.success("Product deleted");
-      if (id === editingId) {
-        setEditingId(null);
-        setForm(emptyForm);
-      }
+      if (id === editingId) resetForm();
       router.refresh();
     });
   };
@@ -114,10 +118,18 @@ export default function ProductsAdmin({ products }: { products: Product[] }) {
           <Input name="price" type="number" min="0" step="0.01" value={form.price} onChange={(e) => updateField("price", e.target.value)} placeholder="Price" />
           <Input name="featured_order" type="number" min="1" step="1" value={form.featured_order} onChange={(e) => updateField("featured_order", e.target.value)} placeholder="Featured order" />
         </div>
-        <Input name="image_url" type="text" value={form.image_url} onChange={(e) => updateField("image_url", e.target.value)} placeholder="Image URL (https://… or /path)" />
+        <div className="grid gap-2">
+          {currentImage && (
+            <Image src={currentImage} alt="Current product image" width={640} height={360} className="aspect-video w-full max-w-xs rounded-md object-cover" />
+          )}
+          <Input key={fileInputKey} name="image" type="file" accept="image/*" />
+          <p className="text-xs text-muted-foreground">
+            {currentImage ? "Choose a new image to replace the current one (max 5MB)." : "Product image (max 5MB)."}
+          </p>
+        </div>
         <div className="flex gap-3">
           <Button type="submit" disabled={isPending}>{isPending ? "Saving..." : editingId ? "Update product" : "Add product"}</Button>
-          {editingId && <Button type="button" variant="outline" onClick={() => { setEditingId(null); setForm(emptyForm); }}>Cancel</Button>}
+          {editingId && <Button type="button" variant="outline" onClick={resetForm}>Cancel</Button>}
         </div>
       </form>
 
