@@ -10,6 +10,8 @@ export interface ProductCardProps {
     variant?: "large" | "small" | "mobile";
     className?: string;
     onClick?: () => void;
+    /** Quantity of this product currently in the cart. */
+    inCart?: number;
 }
 
 function formatPrice(price: string | number) {
@@ -25,6 +27,7 @@ export default function ProductCard({
     variant = "large",
     className,
     onClick,
+    inCart = 0,
 }: ProductCardProps) {
     const isSmall = variant === "small";
     const isMobile = variant === "mobile";
@@ -46,7 +49,7 @@ export default function ProductCard({
             role={isInteractive ? "button" : undefined}
             tabIndex={isInteractive ? 0 : undefined}
             className={cn(
-                "group relative flex h-full flex-col rounded-[10px] p-3",
+                "group relative flex h-full flex-col rounded-[12px] p-4",
                 "transition-[transform,box-shadow,background] duration-300 ease-out",
                 "motion-safe:hover:-translate-y-1 motion-safe:hover:scale-[1.015]",
                 "bg-[#18241C]",
@@ -57,8 +60,8 @@ export default function ProductCard({
                 "hover:shadow-[0_18px_50px_rgba(0,0,0,0.6),0_0_28px_-6px_rgba(74,238,152,0.45)]",
                 isInteractive &&
                 "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pd-green focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0F0C]",
-                isSmall ? "w-[200px] sm:w-[220px] flex-shrink-0" : "w-full",
-                !isSmall && !isMobile && "max-w-[300px]",
+                isSmall ? "w-[240px] sm:w-[280px] flex-shrink-0" : "w-full",
+                !isSmall && !isMobile && "max-w-[360px]",
                 className
             )}
         >
@@ -71,10 +74,10 @@ export default function ProductCard({
                         fill
                         sizes={
                             isMobile
-                                ? "(max-width: 640px) 45vw, 220px"
+                                ? "(max-width: 420px) 90vw, (max-width: 640px) 45vw, 280px"
                                 : isSmall
-                                    ? "220px"
-                                    : "(max-width: 1024px) 45vw, 300px"
+                                    ? "280px"
+                                    : "(max-width: 1024px) 45vw, 360px"
                         }
                         className="object-cover transition-transform duration-500 ease-in-out motion-safe:group-hover:scale-105"
                     />
@@ -90,6 +93,13 @@ export default function ProductCard({
                         {category}
                     </span>
                 ) : null}
+
+                {/* In-cart badge */}
+                {inCart > 0 ? (
+                    <span className="absolute top-2 right-2 z-10 flex h-6 min-w-6 items-center justify-center rounded-full bg-pd-green px-1.5 text-xs font-bold text-[#0A0F0C]">
+                        {inCart}
+                    </span>
+                ) : null}
             </div>
 
             {/* Content */}
@@ -97,13 +107,13 @@ export default function ProductCard({
                 <h3
                     className={cn(
                         "text-white font-bold uppercase tracking-wide leading-tight line-clamp-2",
-                        isMobile || isSmall ? "text-sm sm:text-base" : "text-base lg:text-lg"
+                        isMobile || isSmall ? "text-base sm:text-lg" : "text-lg lg:text-xl"
                     )}
                 >
                     {title}
                 </h3>
                 {!isSmall && !isMobile && description ? (
-                    <p className="text-white/70 text-xs leading-snug line-clamp-2">
+                    <p className="text-white/70 text-sm leading-snug line-clamp-2">
                         {description}
                     </p>
                 ) : null}
@@ -111,11 +121,16 @@ export default function ProductCard({
                     <p
                         className={cn(
                             "mt-auto pt-1 font-[family-name:var(--font-jetbrains)] font-medium text-pd-green-accent",
-                            isMobile || isSmall ? "text-xs" : "text-sm"
+                            isMobile || isSmall ? "text-sm" : "text-base"
                         )}
                     >
                         {formatPrice(price)}
                     </p>
+                ) : null}
+                {isInteractive ? (
+                    <span className="mt-1 rounded-full border border-pd-green/60 px-3 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-pd-green transition-colors group-hover:bg-pd-green group-hover:text-[#0A0F0C]">
+                        Add to cart
+                    </span>
                 ) : null}
             </div>
         </div>
