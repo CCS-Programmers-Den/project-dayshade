@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
+import { JetBrains_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import LayoutWrapper from "@/components/global/LayoutWrapper";
 import { Toaster } from "@/components/ui/sonner";
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  weight: ["400", "500", "700"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Programmers' Den",
@@ -54,7 +62,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <body className={`antialiased ${jetbrainsMono.variable}`}>
         <head>
           <link rel="icon" href="/assets/pd-logo.png" />
         </head>
