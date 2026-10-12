@@ -15,16 +15,12 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export function NavbarDemo() {
-  const navItems: {
-    name: string;
-    link: string;
-    tone: "purple" | "green";
-  }[] = [
-    { name: "Home", link: "/", tone: "green" },
-    { name: "About", link: "/about", tone: "green" },
-    { name: "Perks", link: "/perks", tone: "green" },
-    { name: "Projects", link: "/projects", tone: "green" },
-    { name: "Shop", link: "/shop", tone: "green" },
+  const navItems = [
+    { name: "Home", link: "/" },
+    { name: "About", link: "/about" },
+    { name: "Perks", link: "/perks" },
+    { name: "Projects", link: "/projects" },
+    { name: "Events", link: "/404Page" },
     // { name: "Design System", link: "/design" },
     // { name: "Admin", link: "/admin" },
   ];
