@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils"
 import { ArrowUpRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { getFeatured } from "@/lib/projects/getFeatured"
-import { getProjectImageUrl } from "@/lib/projects/utils"
+import { getFeatured } from "@/lib/actions/projects/get-featured"
+import { getProjectImageUrl } from "@/lib/project-utils"
 
 const MotionGlassContainer = motion.div
 

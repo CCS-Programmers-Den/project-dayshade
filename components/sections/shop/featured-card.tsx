@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
 import type { CarouselApi } from "@/components/ui/carousel";
@@ -29,10 +29,7 @@ interface FeaturedCarouselProps {
 }
 
 function FeaturedCarousel({ images, idPrefix, className }: FeaturedCarouselProps) {
-    const autoplay = useRef<ReturnType<typeof Autoplay> | null>(null);
-    if (!autoplay.current) {
-        autoplay.current = Autoplay({ delay: 5000, stopOnInteraction: true });
-    }
+    const [autoplay] = useState(() => Autoplay({ delay: 5000, stopOnInteraction: true }));
 
     const [api, setApi] = useState<CarouselApi>();
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -64,7 +61,7 @@ function FeaturedCarousel({ images, idPrefix, className }: FeaturedCarouselProps
             <Carousel
                 className="w-full h-full"
                 setApi={setApi}
-                plugins={autoplay.current ? [autoplay.current] : []}
+                plugins={[autoplay]}
                 opts={{ loop: true }}
             >
                 <CarouselContent className="h-full ml-0">

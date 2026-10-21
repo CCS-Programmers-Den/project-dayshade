@@ -4,6 +4,23 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion, MotionProps, Variants } from "motion/react";
 import { ElementType, memo } from "react";
 
+const motionElements = {
+  article: motion.article,
+  div: motion.div,
+  h1: motion.h1,
+  h2: motion.h2,
+  h3: motion.h3,
+  h4: motion.h4,
+  h5: motion.h5,
+  h6: motion.h6,
+  li: motion.li,
+  p: motion.p,
+  section: motion.section,
+  span: motion.span,
+} as const;
+
+type MotionElementType = Extract<ElementType, keyof typeof motionElements>;
+
 type AnimationType = "text" | "word" | "character" | "line";
 type AnimationVariant =
   | "fadeIn"
@@ -45,7 +62,7 @@ interface TextAnimateProps extends MotionProps {
   /**
    * The element type to render
    */
-  as?: ElementType;
+  as?: MotionElementType;
   /**
    * How to split the text ("text", "word", "character")
    */
@@ -311,7 +328,7 @@ const TextAnimateBase = ({
   animation = "fadeIn",
   ...props
 }: TextAnimateProps) => {
-  const MotionComponent = motion.create(Component);
+  const MotionComponent = motionElements[Component];
 
   let segments: string[] = [];
   switch (by) {

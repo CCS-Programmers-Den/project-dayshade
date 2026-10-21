@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Canvas } from '@react-three/fiber';
 import { Environment, OrbitControls, OrthographicCamera  } from '@react-three/drei';
-import { PDLogo } from "@/components/logos/pd-logo";
+import { PDLogo } from "@/components/shared/pd-logo";
 import { ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 

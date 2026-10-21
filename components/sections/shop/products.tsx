@@ -1,7 +1,7 @@
 import { GlassContainer } from "@/components/shared/glass-container";
 import ShopLogo3D from "./shop-logo-3d";
 import ProductsClient from "./products-client";
-import type { Product } from "@/lib/products/queries";
+import type { Product } from "@/lib/actions/products/queries";
 
 export type ProductCategoryType = "shirts" | "hoodies" | "lanyards";
 

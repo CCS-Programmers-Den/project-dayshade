@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "@/styles/globals.css";
-import LayoutWrapper from "@/components/global/LayoutWrapper";
+import LayoutWrapper from "@/components/layout/layout-wrapper";
 import { Toaster } from "@/components/ui/sonner";
 
 const jetbrainsMono = JetBrains_Mono({

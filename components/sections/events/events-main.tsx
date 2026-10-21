@@ -1,7 +1,7 @@
 
 "use client";
 
-import { EVENTS_DATA, getVisibleEventsData } from "@/data/events-data";
+import { EVENTS_DATA, getVisibleEventsData } from "@/lib/constants/events-data";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import EventsTimelineView from "./events-timeline-view";
