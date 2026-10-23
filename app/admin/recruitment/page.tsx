@@ -1,8 +1,8 @@
 import React from "react";
-import { columns } from "@/components/sections/admin/recruitments/column";
-import { DataTable } from "@/components/sections/admin/recruitments/data-table";
+import { columns } from "@/components/sections/admin/recruitment/columns";
+import { DataTable } from "@/components/sections/admin/recruitment/data-table";
 import { Label } from "@/components/ui/label";
-import { getMembers } from "@/lib/members/getMembers";
+import { getMembers } from "@/lib/actions/members/get-members";
 
 const Page = async () => {
   const members = await getMembers();

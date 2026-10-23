@@ -1,97 +1,73 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from "react";
-import { getCurrentShowcase } from "@/lib/projects/getCurrentShowcase";
-import * as React from "react";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
 
-export function MonthlyShowcase() {
+export type ShowcaseProject = {
+  title: string;
+  description: string;
+  devs: string[];
+  tags: string[];
+  embed_url: string | null;
+};
 
-    const [project, setProject] = useState<any | null>(null);
-    const [mounted, setMounted] = useState(false);
+export function MonthlyShowcase({ project }: { project: ShowcaseProject }) {
+  const root = useRef<HTMLElement>(null);
 
-    useEffect(() => {
-      setMounted(true);
-    }, []);
-
-    useEffect(() => {
-      async function load() {
-        try {
-          const data = await getCurrentShowcase();
-          setProject(data);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-      load();
-    }, []);
-
-    if (!mounted) {
-      return null;
-    }
-
-    if (!project) {
-      return (
-        <section className="py-24 w-full text-center text-white/60">
-          Loading project showcase...
-        </section>
-      );
-    }
-
-  const MotionGlassContainer = motion.div
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.fromTo(
+          ".showcase-frame",
+          { clipPath: "inset(10% 8% 10% 8% round 28px)" },
+          {
+            clipPath: "inset(0% 0% 0% 0% round 28px)",
+            ease: "none",
+            scrollTrigger: { trigger: ".showcase-frame", start: "top 90%", end: "top 30%", scrub: true },
+          }
+        );
+      });
+    },
+    { scope: root }
+  );
 
   return (
-    <section className="w-full h-full p-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-8xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-4">
-          <h2 className="text-3xl lg:text-5xl italic font-bold text-pd-green">
-            Monthly Project Showcase
+    <section ref={root} className="px-page py-24 md:py-32">
+      <div className="mb-10 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="mb-3 text-lg font-semibold text-pd-green">Project of the month</p>
+          <h2 className="max-w-[16ch] text-display text-pd-bone">
+            {project.title}
           </h2>
         </div>
-        {/* Project Card */}
-        <div className="bg-pd-black rounded-2xl p-6 md:p-8 border border-gray-800">
-          <div className="text-center">
-            <h3 className="text-xl md:text-3xl font-bold mb-4">
-              {project.title}
-            </h3>
-          </div>
-          {/* Project Youtube Embed */}
-          <div className="relative w-full flex items-center justify-center mx-auto mb-6 rounded-lg overflow-hidden">
-            <div className="md:w-[80%] h-[400px] md:h-[500px]">
-              <iframe
-                key={project.youtubeId}
-                src={project.embed_url}
-                title={project.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              />
-            </div>
-            </div>
-          {/* Credits */}
-          <p className="text-white text-sm text-left mb-4 leading-relaxed">
-            <span className="font-medium">Developer:</span>{" "}
-            {project.devs.join(", ")}
-          </p>
-          {/* Description */}
-          <p className="text-white/90 mb-6 leading-relaxed text-left text-base md:text-lg lg:text-xl line-clamp-3">
-            {project.description}
-          </p>
+        <p className="max-w-md text-lg leading-snug text-pd-bone/70">{project.description}</p>
+      </div>
 
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-4">
-            {project.tags.map((tag: string) => (
-              <span
-                key={tag}
-                className="bg-pd-purple/20 text-pd-purple px-3 py-1 rounded-full text-xs font-semibold"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+      {project.embed_url && (
+        <div className="showcase-frame mx-auto aspect-video w-full max-w-[calc(80svh*16/9)] overflow-hidden rounded-[28px] bg-pd-banner-mid">
+          <iframe
+            src={project.embed_url}
+            title={project.title}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="h-full w-full"
+          />
         </div>
+      )}
+
+      <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <p className="text-lg text-pd-bone/70">
+          Built by <span className="text-pd-bone">{project.devs.join(", ")}</span>
+        </p>
+        <ul className="flex flex-wrap gap-2">
+          {project.tags.map((tag) => (
+            <li key={tag} className="rounded-full bg-pd-purple/15 px-3 py-1 text-sm font-semibold text-[#d49cf0]">
+              {tag}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

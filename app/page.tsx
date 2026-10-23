@@ -1,22 +1,27 @@
-import AnimatedBackground from "@/components/sections/home/animated-background";
-import { GlassContainer } from "@/components/shared/glass-container";
 import HomeHero from "@/components/sections/home/home-hero";
+import Teams from "@/components/sections/home/teams";
 import { MonthlyShowcase } from "@/components/sections/home/monthly-showcase";
 import { FeaturedProjects } from "@/components/sections/home/featured-projects";
-import ConnectWithUsSection from "@/components/sections/home/work-with-us";
+import WhyJoin from "@/components/sections/home/work-with-us";
+import JoinCta from "@/components/sections/home/join-cta";
+import { getCurrentShowcase } from "@/lib/actions/projects/get-current-showcase";
+import { getFeatured } from "@/lib/actions/projects/get-featured";
 
-export default function Page() {
+export default async function Page() {
+  // A failed fetch hides that section instead of breaking the home page.
+  const [showcase, featured] = await Promise.all([
+    getCurrentShowcase().catch(() => null),
+    getFeatured().catch(() => null),
+  ]);
+
   return (
-    <div className="min-h-screen p-4 md:p-16 bg-black text-white pt-12 md:pt-16 relative overflow-hidden">
-      <AnimatedBackground />
-      <GlassContainer className="bg-black/50 relative z-10">
-        <HomeHero />
-        <div className="w-full max-w-7xl mx-auto">
-          <MonthlyShowcase />
-          <FeaturedProjects />
-        </div>
-        <ConnectWithUsSection />
-      </GlassContainer>
+    <div className="text-pd-bone">
+      <HomeHero />
+      <Teams />
+      {showcase && <MonthlyShowcase project={showcase} />}
+      <FeaturedProjects projects={featured ?? []} />
+      <WhyJoin />
+      <JoinCta />
     </div>
   );
 }

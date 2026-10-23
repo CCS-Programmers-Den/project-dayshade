@@ -2,7 +2,7 @@
 
 import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, OrbitControls, OrthographicCamera } from "@react-three/drei";
-import { PDLogo } from "@/components/logos/pd-logo";
+import { PDLogo } from "@/components/shared/pd-logo";
 import { cn } from "@/lib/utils";
 
 /** The home hero renders the logo in a 600x338 canvas at zoom 40. */

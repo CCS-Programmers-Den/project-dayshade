@@ -129,7 +129,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   return (
     <motion.div
       animate={{
-        // Same width as the static state (max-w-7xl); only the offset changes
+        // Same width as the static state (page content width); only the offset changes
         width: "100%",
         y: visible ? 20 : 0,
       }}
@@ -143,7 +143,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
       }}
       data-tone={visible ? tone : undefined}
       className={cn(
-        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-3 lg:flex dark:bg-transparent",
+        "relative z-[60] mx-auto hidden w-full max-w-[calc(100%_-_2*var(--gutter))] flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-3 lg:flex dark:bg-transparent",
         visible && "pd-nav-body",
         className
       )}
